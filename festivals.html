@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="日進未来を紡ぐ会が開催する「日進さくら祭り」と「日進七夕通り秋祭り」の情報。">
+  <title>祭り情報 | 日進未来を紡ぐ会</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Zen+Maru+Gothic:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">🏮</span>
+        <span>日進未来を紡ぐ会</span>
+      </a>
+      <button class="menu-toggle" onclick="document.querySelector('.nav').classList.toggle('open')" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li><a href="index.html">ホーム</a></li>
+          <li><a href="about.html">会の紹介</a></li>
+          <li><a href="festivals.html" class="active">祭り情報</a></li>
+          <li><a href="join.html">メンバー募集</a></li>
+          <li><a href="contact.html">お問い合わせ</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ページヘッダー -->
+  <section class="page-header">
+    <div class="container">
+      <h1>祭り情報</h1>
+      <p>春と秋、2つの祭りで日進を盛り上げています</p>
+    </div>
+  </section>
+
+  <!-- 春祭り -->
+  <section class="section">
+    <div class="container">
+      <div class="festival-detail">
+        <div class="festival-visual" style="background: linear-gradient(135deg, #fce4ec, #f8bbd0);">🌸</div>
+        <div class="festival-info">
+          <span class="tag tag-spring">春</span>
+          <h3>日進さくら祭り</h3>
+          <p class="festival-period">📅 春開催（これまで2回開催済み）</p>
+          <p>
+            これまで日進小学校の校庭で2回開催してきた春のお祭りです。子供向けのお店やワークショップ、ステージパフォーマンスなど、子どもから大人まで楽しめる内容で盛り上がります。
+          </p>
+          <p>
+            第3回からは七夕通り商店街に場所を移して開催予定！さらにパワーアップした春祭りにご期待ください。
+          </p>
+          <span class="festival-status status-active">第2回開催済み・第3回は七夕通り商店街で開催予定</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 秋祭り -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="festival-detail">
+        <div class="festival-visual" style="background: linear-gradient(135deg, #fff3e0, #ffe0b2);">🍁</div>
+        <div class="festival-info">
+          <span class="tag tag-autumn">秋</span>
+          <h3>日進七夕通り秋祭り</h3>
+          <p class="festival-period">📅 11月開催（第2回は2026年11月予定）</p>
+          <p>
+            七夕通り商店街で開催する秋のお祭りです。キッチンカーや屋台、ワークショップなどが出店し、お酒も楽しめる大人も嬉しいお祭りです。
+          </p>
+          <p>
+            昨年の第1回は大盛況でした！2026年11月に第2回を開催予定です。
+          </p>
+          <span class="festival-status status-active">第1回開催済み・第2回は2026年11月予定</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 年間スケジュール -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">年間スケジュール</h2>
+      <p class="section-subtitle">春と秋の2つの祭りで日進を盛り上げています</p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background: var(--color-spring);">🌸</div>
+          <div class="timeline-content">
+            <h4>4〜5月 ─ 日進さくら祭り</h4>
+            <p>桜の季節に地域の方々が集う春のお祭り</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background: var(--color-autumn);">🍁</div>
+          <div class="timeline-content">
+            <h4>11月 ─ 日進七夕通り秋祭り</h4>
+            <p>実りの秋を楽しむグルメと文化のお祭り</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background: var(--color-accent);">📝</div>
+          <div class="timeline-content">
+            <h4>通年 ─ 企画・準備</h4>
+            <p>月例ミーティングや準備活動を随時実施</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>祭りを一緒に作りませんか？</h2>
+      <p>企画・運営・当日のお手伝いなど、さまざまな形で参加できます。</p>
+      <a href="https://forms.gle/bXw5ucu1r9WzK8cm6" target="_blank" class="btn btn-large">メンバーの応募・お問い合わせ</a>
+    </div>
+  </section>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-content">
+        <div class="footer-about">
+          <h4>🏮 日進未来を紡ぐ会</h4>
+          <p>埼玉県さいたま市の日進駅周辺を、祭りの力で盛り上げるコミュニティです。「日進さくら祭り」と「日進七夕通り秋祭り」を開催しています。</p>
+        </div>
+        <div>
+          <h4>ページ</h4>
+          <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="about.html">会の紹介</a>
+            <a href="festivals.html">祭り情報</a>
+            <a href="join.html">メンバー募集</a>
+            <a href="contact.html">お問い合わせ</a>
+          </div>
+        </div>
+        <div>
+          <h4>エリア</h4>
+          <div class="footer-links">
+            <a href="#">埼玉県さいたま市</a>
+            <a href="#">日進駅周辺</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 日進未来を紡ぐ会 All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
