@@ -548,8 +548,8 @@ service cloud.firestore {
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
     import {
-      getFirestore, collection, doc, addDoc, setDoc, deleteDoc,
-      onSnapshot, serverTimestamp, query, orderBy
+      getFirestore, collection, doc, addDoc, setDoc, deleteDoc, writeBatch,
+      getDocs, onSnapshot, serverTimestamp, query, orderBy
     } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
 
     // ============================================================
@@ -1015,9 +1015,29 @@ service cloud.firestore {
       try {
         const arr = csvToTasks(await file.text());
         if (arr.length === 0) throw new Error('有効なタスクがありません');
-        if (!confirm(`${arr.length}件をインポートします。既存データに追加されますがよろしいですか？`)) return;
-        for (const t of arr) {
-          await addDoc(tasksCol, { ...t, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+        const existing = tasks.length;
+        const msg = existing > 0
+          ? `既存の${existing}件をすべて削除し、CSVの${arr.length}件で置き換えます。\nこの操作は取り消せません。よろしいですか？`
+          : `${arr.length}件をインポートします。よろしいですか？`;
+        if (!confirm(msg)) return;
+        // 既存をすべて削除（500件ずつバッチ）
+        if (existing > 0) {
+          const snap = await getDocs(tasksCol);
+          const docs = snap.docs;
+          for (let i = 0; i < docs.length; i += 500) {
+            const batch = writeBatch(db);
+            docs.slice(i, i + 500).forEach(d => batch.delete(d.ref));
+            await batch.commit();
+          }
+        }
+        // 新規追加（500件ずつバッチ）
+        for (let i = 0; i < arr.length; i += 500) {
+          const batch = writeBatch(db);
+          arr.slice(i, i + 500).forEach(t => {
+            const ref = doc(tasksCol);
+            batch.set(ref, { ...t, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+          });
+          await batch.commit();
         }
       } catch (err) {
         alert('CSVの読み込みに失敗しました：' + (err.message || ''));
