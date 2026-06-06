@@ -183,7 +183,31 @@
     .priority-低 { color: #aaa; }
 
     /* ガントビュー */
+    .gantt-controls { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .period-switcher {
+      display: inline-flex;
+      gap: 0.2rem;
+      background: var(--white);
+      padding: 0.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .period-btn {
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border-radius: 7px;
+      color: var(--text-light);
+      min-height: 44px;
+      transition: all 0.15s;
+    }
+    .period-btn:hover { background: var(--bg-alt); }
+    .period-btn.active { background: var(--primary); color: var(--white); font-weight: 700; }
+    .period-btn.active:hover { background: #e85a26; }
+
     .gantt-wrap { background: var(--white); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: auto; }
+    .gantt-row-bg.thisweek { background: #ffe9d6; }
+    .gantt-day.thisweek { background: #ffe9d6; color: var(--primary); font-weight: 700; }
     .gantt {
       display: grid;
       min-width: max-content;
@@ -471,6 +495,14 @@ service cloud.firestore {
 
       <!-- ガント -->
       <section class="view" id="view-gantt">
+        <div class="gantt-controls">
+          <div class="period-switcher" id="period-switcher">
+            <button class="period-btn active" data-period="all">全期間</button>
+            <button class="period-btn" data-period="thisMonth">今月</button>
+            <button class="period-btn" data-period="nextMonth">来月</button>
+            <button class="period-btn" data-period="next2">直近2ヶ月</button>
+          </div>
+        </div>
         <div class="gantt-wrap">
           <div class="gantt" id="gantt"></div>
         </div>
@@ -605,6 +637,7 @@ service cloud.firestore {
     let sortAsc = true;
     let calCursor = new Date();
     calCursor.setDate(1);
+    let ganttPeriod = 'all'; // 'all' | 'thisMonth' | 'nextMonth' | 'next2'
 
     // カテゴリと担当者のセレクト初期化
     const filterCat = document.getElementById('filter-category');
@@ -687,9 +720,41 @@ service cloud.firestore {
       });
     }
 
+    function mondayOf(d) {
+      const x = new Date(d);
+      x.setHours(0,0,0,0);
+      const diff = (x.getDay() + 6) % 7; // 月曜=0, ..., 日曜=6
+      x.setDate(x.getDate() - diff);
+      return x;
+    }
+
+    function computeGanttRange(filtered) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      if (ganttPeriod === 'thisMonth') {
+        return { min: new Date(today.getFullYear(), today.getMonth(), 1),
+                 max: new Date(today.getFullYear(), today.getMonth() + 1, 0) };
+      }
+      if (ganttPeriod === 'nextMonth') {
+        return { min: new Date(today.getFullYear(), today.getMonth() + 1, 1),
+                 max: new Date(today.getFullYear(), today.getMonth() + 2, 0) };
+      }
+      if (ganttPeriod === 'next2') {
+        const end = new Date(today); end.setMonth(end.getMonth() + 2);
+        return { min: today, max: end };
+      }
+      // all
+      const dates = filtered.flatMap(t => [t.startDate, t.dueDate]).filter(Boolean).map(d => new Date(d));
+      if (dates.length === 0) return { min: today, max: today };
+      let min = new Date(Math.min(...dates));
+      let max = new Date(Math.max(...dates));
+      min = new Date(min.getFullYear(), min.getMonth(), 1);
+      max = new Date(max.getFullYear(), max.getMonth() + 1, 0);
+      return { min, max };
+    }
+
     function renderGantt() {
       const wrap = document.getElementById('gantt');
-      const filtered = getFiltered().filter(t => t.startDate || t.dueDate);
+      let filtered = getFiltered().filter(t => t.startDate || t.dueDate);
       if (filtered.length === 0) {
         wrap.innerHTML = '<div class="empty">日付が入ったタスクがありません</div>';
         wrap.style.display = 'block';
@@ -697,32 +762,47 @@ service cloud.firestore {
         return;
       }
 
-      // 日付範囲の決定
-      const dates = filtered.flatMap(t => [t.startDate, t.dueDate]).filter(Boolean).map(d => new Date(d));
-      let min = new Date(Math.min(...dates));
-      let max = new Date(Math.max(...dates));
-      // 余白
-      min.setDate(min.getDate() - 3);
-      max.setDate(max.getDate() + 3);
-      // 月初/月末に拡張
-      min.setDate(1);
-      max = new Date(max.getFullYear(), max.getMonth() + 1, 0);
+      const { min, max } = computeGanttRange(filtered);
 
-      const days = [];
-      for (let d = new Date(min); d <= max; d.setDate(d.getDate() + 1)) days.push(new Date(d));
-      const dayW = 26;
-      const nameW = 220;
+      // 期間が「all」以外なら、その期間に重なるタスクのみ表示
+      if (ganttPeriod !== 'all') {
+        filtered = filtered.filter(t => {
+          const s = new Date(t.startDate || t.dueDate);
+          const e = new Date(t.dueDate || t.startDate);
+          return s <= max && e >= min;
+        });
+        if (filtered.length === 0) {
+          wrap.innerHTML = '<div class="empty">この期間にはタスクがありません</div>';
+          wrap.style.display = 'block';
+          wrap.style.gridTemplateColumns = '';
+          return;
+        }
+      }
+
+      // 月曜起点の週リストを生成
+      const startMonday = mondayOf(min);
+      const endMonday = mondayOf(max);
+      const weeks = [];
+      for (let w = new Date(startMonday); w <= endMonday; w.setDate(w.getDate() + 7)) {
+        weeks.push(new Date(w));
+      }
+
+      const isMobile = window.innerWidth < 600;
+      const weekW = isMobile ? 56 : 72;
+      const nameW = isMobile ? 130 : 220;
       const today = new Date(); today.setHours(0,0,0,0);
+      const todayMonday = mondayOf(today);
 
       wrap.style.display = 'grid';
-      wrap.style.gridTemplateColumns = `${nameW}px repeat(${days.length}, ${dayW}px)`;
+      wrap.style.gridTemplateColumns = `${nameW}px repeat(${weeks.length}, ${weekW}px)`;
 
-      // 月ヘッダー
+      // 月ヘッダー（その週の木曜日がある月で判定 = ISO週準拠）
       let html = `<div class="gantt-task-name" style="background:var(--bg-alt);font-weight:700;">タスク</div>`;
       let monthSpans = [];
       let curMonth = null, count = 0;
-      days.forEach(d => {
-        const m = `${d.getFullYear()}/${d.getMonth()+1}`;
+      weeks.forEach(w => {
+        const thu = new Date(w); thu.setDate(thu.getDate() + 3);
+        const m = `${thu.getFullYear()}年${thu.getMonth()+1}月`;
         if (m !== curMonth) {
           if (curMonth) monthSpans.push({ label: curMonth, count });
           curMonth = m; count = 1;
@@ -733,12 +813,11 @@ service cloud.firestore {
         html += `<div class="gantt-month" style="grid-column: span ${m.count};">${m.label}</div>`;
       });
 
-      // 日ヘッダー行
+      // 週ヘッダー（月/日 = 週の月曜日）
       html += `<div class="gantt-task-name" style="background:var(--bg-alt);"></div>`;
-      days.forEach(d => {
-        const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-        const isToday = d.getTime() === today.getTime();
-        html += `<div class="gantt-day ${isWeekend?'weekend':''} ${isToday?'today':''}">${d.getDate()}</div>`;
+      weeks.forEach(w => {
+        const isThisWeek = w.getTime() === todayMonday.getTime();
+        html += `<div class="gantt-day ${isThisWeek?'thisweek':''}">${w.getMonth()+1}/${w.getDate()}</div>`;
       });
 
       // 各タスク行
@@ -746,23 +825,30 @@ service cloud.firestore {
         html += `<div class="gantt-task-name" data-id="${t.id}" title="${esc(t.title)}">${esc(t.title)}</div>`;
         const start = t.startDate ? new Date(t.startDate) : new Date(t.dueDate);
         const end = t.dueDate ? new Date(t.dueDate) : new Date(t.startDate);
-        const startIdx = Math.max(0, Math.round((start - min) / 86400000));
-        const endIdx = Math.min(days.length - 1, Math.round((end - min) / 86400000));
-        const barLeft = startIdx * dayW;
-        const barWidth = Math.max(dayW - 4, (endIdx - startIdx + 1) * dayW - 4);
+        // 週単位（小数）で位置とサイズ計算
+        const startDayDiff = (start - startMonday) / 86400000;
+        const endDayDiff = (end - startMonday) / 86400000;
+        const totalDays = weeks.length * 7;
+        const clampedStart = Math.max(0, startDayDiff);
+        const clampedEnd = Math.min(totalDays - 1, endDayDiff);
+        const barLeft = (clampedStart / 7) * weekW;
+        const barWidth = Math.max(weekW * 0.35, ((clampedEnd - clampedStart + 1) / 7) * weekW - 4);
         const color = CATEGORY_COLORS[t.category] || '#888';
         const opacity = t.status === '完了' ? 0.4 : 1;
-        // 行背景
-        days.forEach((d, i) => {
-          const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+        const dateLabel = (t.startDate && t.dueDate)
+          ? `${t.startDate.slice(5)}〜${t.dueDate.slice(5)}`
+          : (t.dueDate || t.startDate || '').slice(5);
+
+        weeks.forEach((w, i) => {
+          const isThisWeek = w.getTime() === todayMonday.getTime();
           if (i === 0) {
-            html += `<div class="gantt-row-bg ${isWeekend?'weekend':''}" style="grid-column: span 1; position: relative;">
-              <div class="gantt-bar" data-id="${t.id}" style="left:${barLeft + 2}px; width:${barWidth}px; background:${color}; opacity:${opacity};">
+            html += `<div class="gantt-row-bg ${isThisWeek?'thisweek':''}" style="position: relative;">
+              <div class="gantt-bar" data-id="${t.id}" style="left:${barLeft + 2}px; width:${barWidth}px; background:${color}; opacity:${opacity};" title="${esc(t.title)} (${dateLabel})">
                 ${esc(t.title)}
               </div>
             </div>`;
           } else {
-            html += `<div class="gantt-row-bg ${isWeekend?'weekend':''}"></div>`;
+            html += `<div class="gantt-row-bg ${isThisWeek?'thisweek':''}"></div>`;
           }
         });
       });
@@ -955,6 +1041,17 @@ service cloud.firestore {
     document.getElementById('cal-prev').addEventListener('click', () => { calCursor.setMonth(calCursor.getMonth() - 1); render(); });
     document.getElementById('cal-next').addEventListener('click', () => { calCursor.setMonth(calCursor.getMonth() + 1); render(); });
     document.getElementById('cal-today').addEventListener('click', () => { calCursor = new Date(); calCursor.setDate(1); render(); });
+
+    // ガント期間切替
+    document.getElementById('period-switcher').addEventListener('click', (e) => {
+      const btn = e.target.closest('.period-btn');
+      if (!btn) return;
+      ganttPeriod = btn.dataset.period;
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b === btn));
+      renderGantt();
+    });
+    // 画面リサイズで列幅を再計算
+    window.addEventListener('resize', () => { if (currentView === 'gantt') renderGantt(); });
 
     // CSV エクスポート/インポート
     const CSV_COLUMNS = ['title','category','assignee','startDate','dueDate','status','priority','notes'];
