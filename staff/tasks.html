@@ -404,9 +404,9 @@ service cloud.firestore {
   <div id="app" hidden>
     <header class="topbar">
       <h1>🍁 秋祭りタスク管理 <small>2026年11月</small></h1>
-      <button class="btn btn-outline" id="btn-export">エクスポート</button>
-      <button class="btn btn-outline" id="btn-import">インポート</button>
-      <input type="file" id="file-import" accept="application/json" hidden>
+      <button class="btn btn-outline" id="btn-export">CSV出力</button>
+      <button class="btn btn-outline" id="btn-import">CSV取込</button>
+      <input type="file" id="file-import" accept=".csv,text/csv" hidden>
       <button class="btn btn-primary" id="btn-add">＋ タスク追加</button>
     </header>
 
@@ -942,13 +942,70 @@ service cloud.firestore {
     document.getElementById('cal-next').addEventListener('click', () => { calCursor.setMonth(calCursor.getMonth() + 1); render(); });
     document.getElementById('cal-today').addEventListener('click', () => { calCursor = new Date(); calCursor.setDate(1); render(); });
 
-    // エクスポート/インポート
+    // CSV エクスポート/インポート
+    const CSV_COLUMNS = ['title','category','assignee','startDate','dueDate','status','priority','notes'];
+    const CSV_HEADERS_JP = ['タイトル','カテゴリ','担当者','開始日','期限','状態','優先度','メモ'];
+
+    function csvEscape(v) {
+      const s = String(v ?? '');
+      if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    }
+    function tasksToCSV(arr) {
+      const head = CSV_HEADERS_JP.join(',');
+      const rows = arr.map(t => CSV_COLUMNS.map(c => csvEscape(t[c])).join(','));
+      // BOM付きでExcelの文字化け回避
+      return '﻿' + [head, ...rows].join('\r\n');
+    }
+    // CSV をパース（クォート・改行・エスケープ対応）
+    function parseCSV(text) {
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+      const rows = [];
+      let row = [], field = '', inQ = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (inQ) {
+          if (c === '"') {
+            if (text[i+1] === '"') { field += '"'; i++; }
+            else inQ = false;
+          } else field += c;
+        } else {
+          if (c === '"') inQ = true;
+          else if (c === ',') { row.push(field); field = ''; }
+          else if (c === '\r') { /* skip */ }
+          else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+          else field += c;
+        }
+      }
+      if (field.length || row.length) { row.push(field); rows.push(row); }
+      return rows.filter(r => r.length > 1 || (r.length === 1 && r[0] !== ''));
+    }
+    function csvToTasks(text) {
+      const rows = parseCSV(text);
+      if (rows.length === 0) return [];
+      const header = rows[0].map(h => h.trim());
+      // 日本語ヘッダー or 英語キーのどちらでも受け付ける
+      const idxMap = CSV_COLUMNS.map((key, i) => {
+        const jp = CSV_HEADERS_JP[i];
+        let idx = header.indexOf(key);
+        if (idx === -1) idx = header.indexOf(jp);
+        return idx;
+      });
+      return rows.slice(1).map(r => {
+        const t = {};
+        CSV_COLUMNS.forEach((key, i) => {
+          t[key] = idxMap[i] >= 0 ? (r[idxMap[i]] ?? '') : '';
+        });
+        return t;
+      }).filter(t => t.title); // タイトル必須
+    }
+
     document.getElementById('btn-export').addEventListener('click', () => {
       const data = tasks.map(({ id, createdAt, updatedAt, ...rest }) => rest);
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const blob = new Blob([tasksToCSV(data)], { type: 'text/csv;charset=utf-8' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `tasks-${new Date().toISOString().slice(0,10)}.json`;
+      a.download = `tasks-${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
     });
     document.getElementById('btn-import').addEventListener('click', () => document.getElementById('file-import').click());
@@ -956,14 +1013,14 @@ service cloud.firestore {
       const file = e.target.files[0];
       if (!file) return;
       try {
-        const arr = JSON.parse(await file.text());
-        if (!Array.isArray(arr)) throw new Error();
+        const arr = csvToTasks(await file.text());
+        if (arr.length === 0) throw new Error('有効なタスクがありません');
         if (!confirm(`${arr.length}件をインポートします。既存データに追加されますがよろしいですか？`)) return;
         for (const t of arr) {
           await addDoc(tasksCol, { ...t, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
         }
-      } catch {
-        alert('JSONファイルの読み込みに失敗しました');
+      } catch (err) {
+        alert('CSVの読み込みに失敗しました：' + (err.message || ''));
       }
       e.target.value = '';
     });
