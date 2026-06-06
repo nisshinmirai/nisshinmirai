@@ -1,0 +1,64 @@
+[
+  {"title": "開催日時・会場の最終決定", "category": "企画", "assignee": "", "startDate": "2026-06-15", "dueDate": "2026-06-25", "status": "未着手", "priority": "高", "notes": "11/7(土)開催で確定。会場（七夕通り商店街）の使用可否を確認"},
+  {"title": "実行委員会の立ち上げ・役割分担", "category": "企画", "assignee": "", "startDate": "2026-06-15", "dueDate": "2026-06-30", "status": "未着手", "priority": "高", "notes": "統括／広報／会場／出店／会計／安全 の担当を決める"},
+  {"title": "コンセプト・テーマ設定", "category": "企画", "assignee": "", "startDate": "2026-06-20", "dueDate": "2026-07-10", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "全体タイムスケジュール作成", "category": "企画", "assignee": "", "startDate": "2026-07-01", "dueDate": "2026-07-20", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "雨天時・荒天時の対応方針決定", "category": "企画", "assignee": "", "startDate": "2026-09-01", "dueDate": "2026-09-30", "status": "未着手", "priority": "中", "notes": "中止／延期／決行の判断基準と連絡フロー"},
+
+  {"title": "会場使用許可申請（公園・道路占用）", "category": "許認可", "assignee": "", "startDate": "2026-06-20", "dueDate": "2026-07-31", "status": "未着手", "priority": "高", "notes": "市役所窓口で確認。リードタイム長めなので早めに着手"},
+  {"title": "道路使用許可申請（警察署）", "category": "許認可", "assignee": "", "startDate": "2026-09-01", "dueDate": "2026-09-30", "status": "未着手", "priority": "高", "notes": "開催日の30日前までに申請"},
+  {"title": "火気使用届（消防署）", "category": "許認可", "assignee": "", "startDate": "2026-09-20", "dueDate": "2026-10-20", "status": "未着手", "priority": "中", "notes": "キッチンカー・屋台分"},
+  {"title": "食品衛生・臨時出店届（保健所）", "category": "許認可", "assignee": "", "startDate": "2026-09-20", "dueDate": "2026-10-25", "status": "未着手", "priority": "高", "notes": "出店者リスト確定後に提出"},
+  {"title": "イベント賠償責任保険の加入", "category": "許認可", "assignee": "", "startDate": "2026-09-15", "dueDate": "2026-10-15", "status": "未着手", "priority": "高", "notes": ""},
+  {"title": "救護体制・AED設置・緊急連絡網整備", "category": "許認可", "assignee": "", "startDate": "2026-10-01", "dueDate": "2026-10-31", "status": "未着手", "priority": "高", "notes": ""},
+
+  {"title": "予算案の作成", "category": "予算", "assignee": "", "startDate": "2026-06-25", "dueDate": "2026-07-15", "status": "未着手", "priority": "高", "notes": "収入：協賛金・出店料／支出：会場・備品・謝礼"},
+  {"title": "協賛金・助成金の募集と申請", "category": "予算", "assignee": "", "startDate": "2026-07-15", "dueDate": "2026-09-30", "status": "未着手", "priority": "高", "notes": "地元商店・企業・自治体助成金"},
+  {"title": "出納帳・領収書管理ルール策定", "category": "予算", "assignee": "", "startDate": "2026-09-01", "dueDate": "2026-09-30", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "当日現金（釣銭準備金）の手配", "category": "予算", "assignee": "", "startDate": "2026-10-25", "dueDate": "2026-11-05", "status": "未着手", "priority": "中", "notes": ""},
+
+  {"title": "会場レイアウト図の作成", "category": "会場", "assignee": "", "startDate": "2026-07-15", "dueDate": "2026-08-31", "status": "未着手", "priority": "中", "notes": "ステージ／出店／導線／受付／ゴミ置場"},
+  {"title": "テント・机・椅子・発電機・音響・照明の手配", "category": "会場", "assignee": "", "startDate": "2026-08-01", "dueDate": "2026-09-30", "status": "未着手", "priority": "高", "notes": "業者見積もり→発注"},
+  {"title": "電源・水道の確認", "category": "会場", "assignee": "", "startDate": "2026-08-15", "dueDate": "2026-09-15", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "看板・のぼり・装飾の制作", "category": "会場", "assignee": "", "startDate": "2026-09-15", "dueDate": "2026-10-25", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "ゴミ分別ステーションの設置計画", "category": "会場", "assignee": "", "startDate": "2026-10-01", "dueDate": "2026-10-25", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "仮設トイレ・手洗い場の確保", "category": "会場", "assignee": "", "startDate": "2026-08-01", "dueDate": "2026-09-30", "status": "未着手", "priority": "高", "notes": ""},
+
+  {"title": "出店ルール策定（出店料・衛生・アレルギー表示）", "category": "出店", "assignee": "", "startDate": "2026-07-01", "dueDate": "2026-07-25", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "出店者（飲食・物販）の募集と選定", "category": "出店", "assignee": "", "startDate": "2026-07-15", "dueDate": "2026-09-15", "status": "未着手", "priority": "高", "notes": "キッチンカー・屋台・物販"},
+  {"title": "ステージ出演者の依頼・調整", "category": "出店", "assignee": "", "startDate": "2026-08-01", "dueDate": "2026-09-30", "status": "未着手", "priority": "中", "notes": "地域団体・学校・音楽グループ"},
+  {"title": "体験コーナー・子ども向け企画の準備", "category": "出店", "assignee": "", "startDate": "2026-08-15", "dueDate": "2026-10-15", "status": "未着手", "priority": "中", "notes": "ワークショップ等"},
+  {"title": "抽選会・ビンゴ等の景品手配", "category": "出店", "assignee": "", "startDate": "2026-09-15", "dueDate": "2026-10-25", "status": "未着手", "priority": "低", "notes": ""},
+  {"title": "ステージリハーサル", "category": "出店", "assignee": "", "startDate": "2026-10-25", "dueDate": "2026-11-05", "status": "未着手", "priority": "中", "notes": ""},
+
+  {"title": "チラシ・ポスターのデザイン", "category": "広報", "assignee": "", "startDate": "2026-08-15", "dueDate": "2026-09-20", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "チラシ・ポスターの印刷", "category": "広報", "assignee": "", "startDate": "2026-09-20", "dueDate": "2026-10-05", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "配布先リスト作成（学校・自治会・商店）", "category": "広報", "assignee": "", "startDate": "2026-09-15", "dueDate": "2026-09-30", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "Webサイト・SNS告知（プログラム・交通案内）", "category": "広報", "assignee": "", "startDate": "2026-09-20", "dueDate": "2026-11-07", "status": "未着手", "priority": "高", "notes": "段階的に投稿"},
+  {"title": "プレスリリース配信（地域メディア）", "category": "広報", "assignee": "", "startDate": "2026-10-01", "dueDate": "2026-10-15", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "近隣住民への事前案内", "category": "広報", "assignee": "", "startDate": "2026-10-15", "dueDate": "2026-10-30", "status": "未着手", "priority": "中", "notes": "騒音・交通影響について"},
+
+  {"title": "ボランティアの募集", "category": "人員", "assignee": "", "startDate": "2026-08-15", "dueDate": "2026-10-20", "status": "未着手", "priority": "高", "notes": ""},
+  {"title": "シフト表作成（受付／案内／警備／救護等）", "category": "人員", "assignee": "", "startDate": "2026-10-05", "dueDate": "2026-10-25", "status": "未着手", "priority": "高", "notes": ""},
+  {"title": "当日マニュアル・名札・スタッフTシャツ準備", "category": "人員", "assignee": "", "startDate": "2026-09-20", "dueDate": "2026-10-30", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "ボランティア事前説明会", "category": "人員", "assignee": "", "startDate": "2026-10-25", "dueDate": "2026-11-02", "status": "未着手", "priority": "中", "notes": ""},
+
+  {"title": "駐車場・駐輪場の確保と案内", "category": "交通", "assignee": "", "startDate": "2026-08-01", "dueDate": "2026-09-30", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "公共交通アクセス情報の整備", "category": "交通", "assignee": "", "startDate": "2026-09-20", "dueDate": "2026-10-15", "status": "未着手", "priority": "低", "notes": ""},
+  {"title": "交通整理員の配置計画", "category": "交通", "assignee": "", "startDate": "2026-10-05", "dueDate": "2026-10-25", "status": "未着手", "priority": "高", "notes": ""},
+  {"title": "近隣商店・住民への挨拶回り", "category": "交通", "assignee": "", "startDate": "2026-10-15", "dueDate": "2026-10-30", "status": "未着手", "priority": "中", "notes": ""},
+
+  {"title": "【当日】設営", "category": "当日", "assignee": "", "startDate": "2026-11-07", "dueDate": "2026-11-07", "status": "未着手", "priority": "高", "notes": "早朝〜開場前"},
+  {"title": "【当日】受付開始・開会式", "category": "当日", "assignee": "", "startDate": "2026-11-07", "dueDate": "2026-11-07", "status": "未着手", "priority": "高", "notes": ""},
+  {"title": "【当日】進行管理・アナウンス・迷子対応", "category": "当日", "assignee": "", "startDate": "2026-11-07", "dueDate": "2026-11-07", "status": "未着手", "priority": "高", "notes": ""},
+  {"title": "【当日】現金回収・中間集計", "category": "当日", "assignee": "", "startDate": "2026-11-07", "dueDate": "2026-11-07", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "【当日】写真・動画記録", "category": "当日", "assignee": "", "startDate": "2026-11-07", "dueDate": "2026-11-07", "status": "未着手", "priority": "中", "notes": "広報用素材"},
+  {"title": "【当日】撤収・原状復帰・ゴミ処理", "category": "当日", "assignee": "", "startDate": "2026-11-07", "dueDate": "2026-11-07", "status": "未着手", "priority": "高", "notes": ""},
+
+  {"title": "会場清掃確認・備品返却", "category": "事後", "assignee": "", "startDate": "2026-11-08", "dueDate": "2026-11-09", "status": "未着手", "priority": "高", "notes": ""},
+  {"title": "出演者・協賛者・ボランティアへのお礼", "category": "事後", "assignee": "", "startDate": "2026-11-08", "dueDate": "2026-11-15", "status": "未着手", "priority": "高", "notes": "メール／手紙"},
+  {"title": "会計報告・残金処理", "category": "事後", "assignee": "", "startDate": "2026-11-10", "dueDate": "2026-11-30", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "アンケート集計・反省会の開催", "category": "事後", "assignee": "", "startDate": "2026-11-15", "dueDate": "2026-12-15", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "開催報告書の作成（次回引き継ぎ用）", "category": "事後", "assignee": "", "startDate": "2026-11-20", "dueDate": "2026-12-20", "status": "未着手", "priority": "中", "notes": ""},
+  {"title": "SNS・Webでの開催報告投稿", "category": "事後", "assignee": "", "startDate": "2026-11-08", "dueDate": "2026-11-15", "status": "未着手", "priority": "中", "notes": ""}
+]
